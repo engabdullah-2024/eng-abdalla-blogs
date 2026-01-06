@@ -16,6 +16,7 @@ export default async function EditArticlePage({ params }: { params: Promise<{ id
         coverImage: blog.coverImage || "",
         published: blog.published,
         authorName: blog.authorName || "Eng Abdalla",
+        category: blog.category || "Web Dev",
     };
 
     return <BlogForm initialData={initialData} isEdit />;

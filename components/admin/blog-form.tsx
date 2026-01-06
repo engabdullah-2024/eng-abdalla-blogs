@@ -22,6 +22,7 @@ const formSchema = z.object({
     coverImage: z.string(),
     published: z.boolean(),
     authorName: z.string(),
+    category: z.string().min(1, "Category is required"),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -35,6 +36,7 @@ interface BlogFormProps {
         coverImage: string;
         published: boolean;
         authorName: string;
+        category?: string;
     };
     isEdit?: boolean;
 }
@@ -47,13 +49,17 @@ export function BlogForm({ initialData, isEdit }: BlogFormProps) {
 
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
-        defaultValues: initialData || {
+        defaultValues: initialData ? {
+            ...initialData,
+            category: initialData.category || "Web Dev"
+        } : {
             title: "",
             description: "",
             content: "",
             coverImage: "",
             published: false,
             authorName: "Eng Abdalla",
+            category: "Web Dev",
         },
     });
 
@@ -138,6 +144,19 @@ export function BlogForm({ initialData, isEdit }: BlogFormProps) {
                                         <FormLabel>Title</FormLabel>
                                         <FormControl>
                                             <Input placeholder="Article Title" {...field} />
+                                        </FormControl>
+                                        <FormMessage />
+                                    </FormItem>
+                                )}
+                            />
+                            <FormField
+                                control={form.control}
+                                name="category"
+                                render={({ field }) => (
+                                    <FormItem>
+                                        <FormLabel>Category</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="e.g. Web Dev, AI, Cloud" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -234,6 +253,6 @@ export function BlogForm({ initialData, isEdit }: BlogFormProps) {
                     </div>
                 </form>
             </Form>
-        </div>
+        </div >
     )
 }

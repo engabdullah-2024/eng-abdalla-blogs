@@ -48,6 +48,7 @@ export async function POST(req: Request) {
                 description: body.description,
                 content: body.content,
                 coverImage: body.coverImage,
+                category: body.category || "Web Dev",
                 authorName: body.authorName || 'Eng Abdalla', // Default per requirements
                 authorImage: body.authorImage,
                 published: body.published || false,

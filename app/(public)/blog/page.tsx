@@ -1,41 +1,69 @@
 import { prisma } from "@/lib/prisma";
 import { BlogCard } from "@/components/blog-card";
+import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
-export default async function BlogListPage() {
+export default async function BlogListPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ category?: string }>;
+}) {
+    const { category } = await searchParams;
+
     const blogs = await prisma.blog.findMany({
-        where: { published: true },
+        where: {
+            published: true,
+            ...(category ? { category: { equals: category, mode: 'insensitive' } } : {}),
+        },
         orderBy: { createdAt: "desc" },
     });
+
+    const categories = [
+        { label: "Web Dev", color: "blue" },
+        { label: "AI", color: "green" },
+        { label: "FullStack", color: "orange" },
+        { label: "Tech", color: "pink" },
+    ];
 
     return (
         <div className="container mx-auto px-4 py-12 space-y-8">
             <div className="space-y-6 text-center">
                 <div className="flex flex-wrap items-center justify-center gap-3 mb-4">
-                    <span className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 font-medium text-sm hover:scale-105 transition-transform">
-                        #WebDev
-                    </span>
-                    <span className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-green-500/10 to-teal-500/10 border border-green-500/20 text-green-600 dark:text-green-400 font-medium text-sm hover:scale-105 transition-transform">
-                        #AI
-                    </span>
-                    <span className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-orange-500/10 to-red-500/10 border border-orange-500/20 text-orange-600 dark:text-orange-400 font-medium text-sm hover:scale-105 transition-transform">
-                        #FullStack
-                    </span>
-                    <span className="inline-flex items-center px-4 py-2 rounded-full bg-gradient-to-r from-pink-500/10 to-rose-500/10 border border-pink-500/20 text-pink-600 dark:text-pink-400 font-medium text-sm hover:scale-105 transition-transform">
-                        #Tech
-                    </span>
+                    <Link
+                        href="/blog"
+                        className={`inline-flex items-center px-4 py-2 rounded-full font-medium text-sm transition-all hover:scale-105 ${!category
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground hover:bg-muted/80"
+                            }`}
+                    >
+                        #All
+                    </Link>
+                    {categories.map((cat) => (
+                        <Link
+                            key={cat.label}
+                            href={`/blog?category=${cat.label}`}
+                            className={`inline-flex items-center px-4 py-2 rounded-full border font-medium text-sm transition-all hover:scale-105 ${category?.toLowerCase() === cat.label.toLowerCase()
+                                ? `bg-${cat.color}-500/20 border-${cat.color}-500/50 text-${cat.color}-600 dark:text-${cat.color}-400`
+                                : "bg-muted/50 border-transparent text-muted-foreground hover:bg-muted"
+                                }`}
+                        >
+                            #{cat.label}
+                        </Link>
+                    ))}
                 </div>
                 <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-                    All Articles
+                    {category ? `${category} Articles` : "All Articles"}
                 </h1>
                 <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-                    Explore insights on web development, AI, full-stack engineering, and cutting-edge tech.
+                    {category
+                        ? `A curated collection of my best thoughts and tutorials on ${category}.`
+                        : "Explore insights on web development, AI, full-stack engineering, and cutting-edge tech."}
                 </p>
                 <div className="pt-4 flex items-center justify-center">
                     <span className="px-3 py-1 text-xs font-semibold bg-primary/10 text-primary border border-primary/20 rounded-full">
-                        Showing {blogs.length} of {blogs.length} articles
+                        Showing {blogs.length} articles
                     </span>
                 </div>
             </div>
@@ -48,7 +76,7 @@ export default async function BlogListPage() {
 
             {blogs.length === 0 && (
                 <div className="text-center py-20">
-                    <p className="text-muted-foreground">No articles found.</p>
+                    <p className="text-muted-foreground">No articles found in this category.</p>
                 </div>
             )}
         </div>

@@ -12,6 +12,7 @@ interface BlogCardProps {
         createdAt: Date | string;
         coverImage?: string | null;
         authorName: string;
+        category?: string;
     };
 }
 
@@ -23,20 +24,27 @@ export function BlogCard({ blog }: BlogCardProps) {
         >
             <Link href={`/blog/${blog.id}`}>
                 <Card className="h-full overflow-hidden border-border/40 bg-card/50 transition-colors hover:bg-card/80 hover:border-primary/50 group">
-                    {blog.coverImage ? (
-                        <div className="aspect-video w-full overflow-hidden relative">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <div className="relative aspect-video w-full overflow-hidden">
+                        {blog.coverImage ? (
+                            /* eslint-disable-next-line @next/next/no-img-element */
                             <img
                                 src={blog.coverImage}
                                 alt={blog.title}
                                 className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
                             />
-                        </div>
-                    ) : (
-                        <div className="aspect-video w-full bg-muted/30 flex items-center justify-center text-muted-foreground/50">
-                            <span className="text-sm">No Cover Image</span>
-                        </div>
-                    )}
+                        ) : (
+                            <div className="w-full h-full bg-muted/30 flex items-center justify-center text-muted-foreground/50">
+                                <span className="text-sm">No Cover Image</span>
+                            </div>
+                        )}
+                        {blog.category && (
+                            <div className="absolute top-3 left-3">
+                                <span className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider bg-black/60 backdrop-blur-md text-white rounded">
+                                    {blog.category}
+                                </span>
+                            </div>
+                        )}
+                    </div>
                     <CardHeader>
                         <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
                             <span>{new Date(blog.createdAt).toLocaleDateString("en-US", { year: 'numeric', month: 'long', day: 'numeric' })}</span>
