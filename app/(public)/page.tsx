@@ -52,7 +52,7 @@ export default async function HomePage() {
 
                 {blogs.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {blogs.map((blog) => (
+                        {blogs.map((blog: { id: string; title: string; description: string; coverImage: string | null; createdAt: Date; authorName: string }) => (
                             <BlogCard key={blog.id} blog={blog} />
                         ))}
                     </div>
