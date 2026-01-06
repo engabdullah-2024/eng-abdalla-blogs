@@ -52,7 +52,7 @@ export default async function DashboardPage() {
                                 </TableCell>
                             </TableRow>
                         ) : (
-                            blogs.map((blog) => (
+                            blogs.map((blog: { id: string; title: string; published: boolean; createdAt: Date }) => (
                                 <TableRow key={blog.id}>
                                     <TableCell className="font-medium max-w-[300px] truncate">
                                         {blog.title}
