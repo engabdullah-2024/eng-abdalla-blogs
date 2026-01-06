@@ -33,6 +33,11 @@ export default async function BlogListPage() {
                 <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
                     Explore insights on web development, AI, full-stack engineering, and cutting-edge tech.
                 </p>
+                <div className="pt-4 flex items-center justify-center">
+                    <span className="px-3 py-1 text-xs font-semibold bg-primary/10 text-primary border border-primary/20 rounded-full">
+                        Showing {blogs.length} of {blogs.length} articles
+                    </span>
+                </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
