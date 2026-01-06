@@ -25,6 +25,7 @@ export default async function BlogListPage({
         { label: "AI", color: "green" },
         { label: "FullStack", color: "orange" },
         { label: "Tech", color: "pink" },
+        { label: "Cloud", color: "cyan" },
     ];
 
     return (
