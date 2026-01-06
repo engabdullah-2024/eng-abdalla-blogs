@@ -165,6 +165,7 @@ export function BlogForm({ initialData, isEdit }: BlogFormProps) {
                                                 <option value="FullStack">FullStack</option>
                                                 <option value="Tech">Tech</option>
                                                 <option value="Cloud">Cloud</option>
+                                                <option value="Database">Database</option>
                                             </select>
                                         </FormControl>
                                         <FormMessage />
