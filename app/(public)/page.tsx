@@ -8,11 +8,33 @@ export const dynamic = "force-dynamic";
 export const revalidate = 60;
 
 export default async function HomePage() {
-    const blogs = await prisma.blog.findMany({
-        where: { published: true },
-        orderBy: { createdAt: "desc" },
-        take: 3,
-    });
+    let blogs: any[] = [];
+    let error = null;
+
+    try {
+        blogs = await prisma.blog.findMany({
+            where: { published: true },
+            orderBy: { createdAt: "desc" },
+            take: 3,
+        });
+    } catch (e: any) {
+        console.error("Database connection error:", e);
+        error = e.message;
+    }
+
+    if (error) {
+        return (
+            <div className="flex min-h-screen items-center justify-center p-4">
+                <div className="max-w-md w-full p-6 bg-destructive/10 border border-destructive/20 rounded-xl text-center space-y-4">
+                    <h1 className="text-xl font-bold text-destructive">Database Connection Error</h1>
+                    <p className="text-sm text-muted-foreground">The application couldn't connect to the database. Please check your DATABASE_URL and MongoDB IP whitelisting.</p>
+                    <code className="block p-2 bg-black/5 rounded text-[10px] text-left overflow-auto max-h-32">
+                        {error}
+                    </code>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="flex flex-col min-h-[calc(100vh-4rem)]">
