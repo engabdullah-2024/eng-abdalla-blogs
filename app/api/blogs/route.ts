@@ -1,21 +1,26 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { isAuthenticated } from '@/lib/api-auth'
+import { getCurrentUser } from '@/lib/auth'
 
 export async function GET(req: Request) {
     try {
         const { searchParams } = new URL(req.url)
         const adminView = searchParams.get('admin') === 'true'
+        const user = await getCurrentUser()
 
         // Only allow admin view if authenticated
         if (adminView) {
-            const isAuth = await isAuthenticated()
-            if (!isAuth) {
+            if (!user) {
                 return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
             }
         }
 
-        const where = adminView ? {} : { published: true }
+        let where: any = adminView ? {} : { published: true }
+
+        // If it's an author in admin view, filter by their own blogs
+        if (adminView && user?.role === 'AUTHOR') {
+            where.authorId = user.id
+        }
 
         const blogs = await prisma.blog.findMany({
             where,
@@ -24,23 +29,19 @@ export async function GET(req: Request) {
 
         return NextResponse.json(blogs)
     } catch (error) {
+        console.error(error)
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
     }
 }
 
 export async function POST(req: Request) {
     try {
-        const isAuth = await isAuthenticated()
-        if (!isAuth) {
+        const user = await getCurrentUser()
+        if (!user) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
         }
 
         const body = await req.json()
-
-        // Basic validation
-        if (!body.title || !body.firstContentCheck) {
-            // We can just rely on frontend for required fields or add more checks
-        }
 
         const blog = await prisma.blog.create({
             data: {
@@ -49,11 +50,13 @@ export async function POST(req: Request) {
                 content: body.content,
                 coverImage: body.coverImage,
                 category: body.category || "Web Dev",
-                authorName: body.authorName || 'Eng Abdalla', // Default per requirements
+                authorName: body.authorName || user.email.split('@')[0], // Use email prefix if name not provided
                 authorImage: body.authorImage,
                 published: body.published || false,
-            }
+                authorId: user.id
+            } as any
         })
+
 
         return NextResponse.json(blog)
     } catch (error) {
@@ -61,3 +64,4 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
     }
 }
+

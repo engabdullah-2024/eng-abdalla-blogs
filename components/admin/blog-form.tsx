@@ -39,9 +39,11 @@ interface BlogFormProps {
         category?: string;
     };
     isEdit?: boolean;
+    initialAuthorName?: string;
 }
 
-export function BlogForm({ initialData, isEdit }: BlogFormProps) {
+export function BlogForm({ initialData, isEdit, initialAuthorName }: BlogFormProps) {
+
     const router = useRouter();
     const [loading, setLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
@@ -58,9 +60,10 @@ export function BlogForm({ initialData, isEdit }: BlogFormProps) {
             content: "",
             coverImage: "",
             published: false,
-            authorName: "Eng Abdalla",
+            authorName: initialAuthorName || "Eng Abdalla",
             category: "Web Dev",
         },
+
     });
 
     async function onSubmit(values: FormValues) {
