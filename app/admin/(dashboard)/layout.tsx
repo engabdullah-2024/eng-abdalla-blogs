@@ -1,5 +1,7 @@
 import { AdminSidebar } from "@/components/admin/admin-sidebar";
 import { MobileNav } from "@/components/admin/mobile-nav";
+import { ModeToggle } from "@/components/mode-toggle";
+
 
 
 export default function AdminDashboardLayout({
@@ -21,8 +23,10 @@ export default function AdminDashboardLayout({
                     </div>
 
                     <div className="flex items-center gap-4 text-xs font-medium text-muted-foreground">
-                        <span>{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                        <span className="hidden lg:inline">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                        <ModeToggle />
                     </div>
+
                 </header>
                 <div className="container mx-auto p-6 md:p-10 max-w-5xl">
                     {children}
