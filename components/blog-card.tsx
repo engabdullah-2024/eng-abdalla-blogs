@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Heart, MessageSquare } from "lucide-react";
 
 interface BlogCardProps {
     blog: {
@@ -14,6 +14,10 @@ interface BlogCardProps {
         coverImage?: string | null;
         authorName: string;
         category?: string;
+        _count?: {
+            likes: number;
+            comments: number;
+        };
     };
 }
 
@@ -65,8 +69,23 @@ export function BlogCard({ blog }: BlogCardProps) {
                             </p>
                         </div>
 
-                        <div className="pt-4 flex items-center text-primary font-black text-xs uppercase tracking-widest gap-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-                            Read Declassified Report <ArrowRight className="w-3.5 h-3.5" />
+                        <div className="pt-4 flex items-center justify-between">
+                            <div className="flex items-center text-primary font-black text-xs uppercase tracking-widest gap-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                                Read Declassified Report <ArrowRight className="w-3.5 h-3.5" />
+                            </div>
+
+                            {blog._count && (
+                                <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                                    <div className="flex items-center gap-1.5">
+                                        <Heart className="w-3 h-3 text-red-500/60" />
+                                        <span>{blog._count.likes}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                        <MessageSquare className="w-3 h-3 text-blue-500/60" />
+                                        <span>{blog._count.comments}</span>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </Card>

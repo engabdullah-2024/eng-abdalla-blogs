@@ -12,6 +12,14 @@ export default async function HomePage() {
     try {
         blogs = await prisma.blog.findMany({
             where: { published: true },
+            include: {
+                _count: {
+                    select: {
+                        likes: true,
+                        comments: true
+                    }
+                }
+            },
             orderBy: { createdAt: "desc" },
             take: 3,
         });

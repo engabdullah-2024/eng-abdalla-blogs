@@ -5,6 +5,8 @@ import remarkGfm from "remark-gfm";
 import Link from "next/link";
 import { ChevronLeft, Calendar, User, Clock, Share2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LikeButton } from "@/components/blog/like-button";
+import { CommentSection } from "@/components/blog/comment-section";
 
 export const dynamic = 'force-dynamic';
 
@@ -95,23 +97,34 @@ export default async function BlogPage({ params }: { params: Promise<{ id: strin
                     )}
 
                     {/* Content Section */}
-                    <div className="prose prose-slate prose-lg dark:prose-invert max-w-none 
-                        prose-headings:text-slate-900 dark:prose-headings:text-white prose-headings:font-black prose-headings:tracking-tighter
-                        prose-p:text-slate-600 dark:prose-p:text-slate-400 prose-p:leading-relaxed
-                        prose-a:text-primary prose-a:font-bold prose-a:no-underline hover:prose-a:underline
-                        prose-strong:text-slate-900 dark:prose-strong:text-white
-                        prose-code:text-primary prose-code:bg-primary/5 dark:prose-code:bg-primary/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none
-                        prose-pre:bg-slate-900 dark:prose-pre:bg-black prose-pre:border prose-pre:border-white/10 prose-pre:rounded-2xl
-                        prose-img:rounded-[2rem] prose-img:border prose-img:border-slate-200 dark:prose-img:border-white/10
-                        pt-8"
-                    >
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                            {blog.content}
-                        </ReactMarkdown>
+                    <div className="relative">
+                        <div className="flex justify-start mb-8">
+                            <LikeButton blogId={blog.id} />
+                        </div>
+
+                        <div className="prose prose-slate prose-lg dark:prose-invert max-w-none 
+                            prose-headings:text-slate-900 dark:prose-headings:text-white prose-headings:font-black prose-headings:tracking-tighter
+                            prose-p:text-slate-600 dark:prose-p:text-slate-400 prose-p:leading-relaxed
+                            prose-a:text-primary prose-a:font-bold prose-a:no-underline hover:prose-a:underline
+                            prose-strong:text-slate-900 dark:prose-strong:text-white
+                            prose-code:text-primary prose-code:bg-primary/5 dark:prose-code:bg-primary/10 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded-md prose-code:before:content-none prose-code:after:content-none
+                            prose-pre:bg-slate-900 dark:prose-pre:bg-black prose-pre:border prose-pre:border-white/10 prose-pre:rounded-2xl
+                            prose-img:rounded-[2rem] prose-img:border prose-img:border-slate-200 dark:prose-img:border-white/10
+                            pt-8"
+                        >
+                            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                {blog.content}
+                            </ReactMarkdown>
+                        </div>
+                    </div>
+
+                    {/* Interaction Section */}
+                    <div className="pt-20 border-t border-slate-200 dark:border-white/5">
+                        <CommentSection blogId={blog.id} />
                     </div>
 
                     {/* Post Footer */}
-                    <footer className="pt-20 border-t border-slate-200 dark:border-white/5">
+                    <footer className="pt-20 border-t border-slate-200 dark:border-white/5 pb-20">
                         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
                             <div className="space-y-4 text-center md:text-left">
                                 <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary">Intelligence End</h4>

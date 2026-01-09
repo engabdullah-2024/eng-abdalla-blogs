@@ -18,6 +18,14 @@ export default async function BlogListPage({
             published: true,
             ...(category ? { category: { equals: category, mode: 'insensitive' } } : {}),
         },
+        include: {
+            _count: {
+                select: {
+                    likes: true,
+                    comments: true
+                }
+            }
+        },
         orderBy: { createdAt: "desc" },
     });
 
