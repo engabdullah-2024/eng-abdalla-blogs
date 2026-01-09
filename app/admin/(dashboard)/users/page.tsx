@@ -14,6 +14,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { UserPlus, Loader2 } from "lucide-react";
+import Link from "next/link";
 import {
     Dialog,
     DialogContent,
@@ -36,6 +37,7 @@ export default function UsersPage() {
     const [loading, setLoading] = useState(true);
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [submitting, setSubmitting] = useState(false);
+    const [currentUser, setCurrentUser] = useState<{ role: string } | null>(null);
 
     // Form states
     const [email, setEmail] = useState("");
@@ -57,8 +59,38 @@ export default function UsersPage() {
     };
 
     useEffect(() => {
-        fetchUsers();
+        fetch("/api/auth/me")
+            .then(res => res.json())
+            .then(data => {
+                setCurrentUser(data.user);
+                if (data.user?.role === 'SUPER_ADMIN') {
+                    fetchUsers();
+                } else {
+                    setLoading(false);
+                }
+            })
+            .catch(() => setLoading(false));
     }, []);
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px]">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </div>
+        );
+    }
+
+    if (currentUser?.role !== 'SUPER_ADMIN') {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
+                <h1 className="text-2xl font-bold text-red-500">Access Denied</h1>
+                <p className="text-muted-foreground">This area is reserved for system administrators only.</p>
+                <Button asChild>
+                    <Link href="/admin/dashboard">Go back to Dashboard</Link>
+                </Button>
+            </div>
+        );
+    }
 
     const handleCreateUser = async (e: React.FormEvent) => {
         e.preventDefault();

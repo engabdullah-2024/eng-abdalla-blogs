@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { ModeToggle } from "@/components/mode-toggle";
+import { SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 
 const navItems = [
     { name: "Home", href: "/" },
@@ -43,9 +44,17 @@ export function Navbar() {
                     </nav>
                 </div>
                 <div className="flex items-center gap-4">
-                    <Link href="/admin/login" className="text-xs text-muted-foreground hover:text-primary transition-colors">
-                        Admin
-                    </Link>
+                    <SignedIn>
+                        <Link href="/admin/dashboard" className="text-xs text-muted-foreground hover:text-primary transition-colors">
+                            Dashboard
+                        </Link>
+                        <UserButton afterSignOutUrl="/" />
+                    </SignedIn>
+                    <SignedOut>
+                        <Link href="/admin/login" className="text-xs text-muted-foreground hover:text-primary transition-colors">
+                            Sign In
+                        </Link>
+                    </SignedOut>
                     <ModeToggle />
                 </div>
             </div>

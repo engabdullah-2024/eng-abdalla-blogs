@@ -7,24 +7,29 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useEffect, useState } from "react";
+import { useUser, useClerk } from "@clerk/nextjs";
 
 export function SidebarContent({ onInteract }: { onInteract?: () => void }) {
     const pathname = usePathname();
+    const { user: clerkUser, isLoaded } = useUser();
+    const { signOut } = useClerk();
     const router = useRouter();
     const [user, setUser] = useState<{ role: string; name?: string | null; email?: string } | null>(null);
 
     useEffect(() => {
-        fetch("/api/auth/me")
-            .then(res => res.json())
-            .then(data => setUser(data.user))
-            .catch(() => setUser(null));
-    }, []);
+        if (isLoaded && clerkUser) {
+            fetch("/api/auth/me")
+                .then(res => res.json())
+                .then(data => setUser(data.user))
+                .catch(() => setUser(null));
+        }
+    }, [isLoaded, clerkUser]);
 
     const handleLogout = async () => {
         try {
-            await fetch("/api/auth/logout", { method: "POST" });
+            await signOut();
             toast.success("Logged out");
-            router.push("/admin/login");
+            router.push("/");
             router.refresh();
         } catch {
             toast.error("Logout failed");

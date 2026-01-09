@@ -1,19 +1,17 @@
 import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
-import { verifyToken } from '@/lib/auth'
+import { syncUser } from '@/lib/sync-user'
 
 export async function GET() {
-    const cookieStore = await cookies()
-    const token = cookieStore.get('token')?.value
+    try {
+        const user = await syncUser();
 
-    if (!token) {
+        if (!user) {
+            return NextResponse.json({ user: null })
+        }
+
+        return NextResponse.json({ user })
+    } catch (error) {
+        console.error("Auth error:", error);
         return NextResponse.json({ user: null })
     }
-
-    const payload = verifyToken(token)
-    if (!payload) {
-        return NextResponse.json({ user: null })
-    }
-
-    return NextResponse.json({ user: payload })
 }

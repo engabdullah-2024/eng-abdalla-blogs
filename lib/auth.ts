@@ -1,8 +1,4 @@
-import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
-import { cookies } from 'next/headers'
-
-const JWT_SECRET = process.env.JWT_SECRET || 'super_secret_key_123456789'
+import { syncUser } from "./sync-user";
 
 export interface UserPayload {
     id: string;
@@ -11,33 +7,24 @@ export interface UserPayload {
     role: 'SUPER_ADMIN' | 'AUTHOR';
 }
 
-
-export const hashPassword = async (password: string) => {
-    return await bcrypt.hash(password, 10)
-}
-
-export const comparePassword = async (password: string, hash: string) => {
-    return await bcrypt.compare(password, hash)
-}
-
-export const signToken = (payload: any) => {
-    return jwt.sign(payload, JWT_SECRET, { expiresIn: '7d' })
-}
-
-export const verifyToken = (token: string) => {
-    try {
-        return jwt.verify(token, JWT_SECRET) as UserPayload
-    } catch (error) {
-        return null
-    }
-}
-
+/**
+ * @deprecated Use syncUser from @/lib/sync-user instead
+ */
 export const getCurrentUser = async () => {
-    const cookieStore = await cookies()
-    const token = cookieStore.get('token')?.value
+    const user = await syncUser();
+    if (!user) return null;
 
-    if (!token) return null
-
-    return verifyToken(token)
+    return {
+        id: user.id,
+        email: user.email,
+        name: user.name,
+        role: user.role as 'SUPER_ADMIN' | 'AUTHOR'
+    } as UserPayload;
 }
+
+// Keep these for now if needed, but they are not used with Clerk
+export const verifyToken = (token: string) => null;
+export const signToken = (payload: any) => "";
+export const hashPassword = async (password: string) => "";
+export const comparePassword = async (password: string, hash: string) => false;
 

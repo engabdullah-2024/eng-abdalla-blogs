@@ -1,9 +1,6 @@
-import { verifyToken } from "@/lib/auth";
-import { cookies } from "next/headers";
+import { auth } from "@clerk/nextjs/server";
 
 export async function isAuthenticated() {
-    const cookieStore = await cookies();
-    const token = cookieStore.get("token")?.value;
-    if (!token) return false;
-    return !!verifyToken(token);
+    const session = await auth();
+    return !!session.userId;
 }
