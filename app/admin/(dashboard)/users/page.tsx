@@ -132,65 +132,8 @@ export default function UsersPage() {
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-2xl md:text-3xl font-bold tracking-tight">User Management</h1>
-                    <p className="text-muted-foreground text-sm">Manage authors and administrators.</p>
+                    <p className="text-muted-foreground text-sm">Review authors and system activity. Manage accounts via Clerk Dashboard.</p>
                 </div>
-                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <DialogTrigger asChild>
-                        <Button className="w-full sm:w-auto">
-                            <UserPlus className="mr-2 h-4 w-4" /> Add User
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                        <DialogHeader>
-                            <DialogTitle>Create New User</DialogTitle>
-                        </DialogHeader>
-                        <form onSubmit={handleCreateUser} className="space-y-4 pt-4">
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Name</label>
-                                <Input
-                                    placeholder="Full Name"
-                                    value={name}
-                                    onChange={(e) => setName(e.target.value)}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Email</label>
-                                <Input
-                                    type="email"
-                                    placeholder="email@example.com"
-                                    required
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Password</label>
-                                <Input
-                                    type="password"
-                                    placeholder="••••••••"
-                                    required
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-medium">Role</label>
-                                <select
-                                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                                    value={role}
-                                    onChange={(e) => setRole(e.target.value)}
-                                >
-                                    <option value="AUTHOR">Author</option>
-                                    <option value="SUPER_ADMIN">Super Admin</option>
-                                </select>
-                            </div>
-
-                            <Button type="submit" className="w-full" disabled={submitting}>
-                                {submitting ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Create User"}
-                            </Button>
-                        </form>
-                    </DialogContent>
-                </Dialog>
             </div>
 
             <div className="rounded-md border bg-card overflow-hidden">
