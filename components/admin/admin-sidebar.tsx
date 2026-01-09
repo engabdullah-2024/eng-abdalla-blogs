@@ -82,12 +82,11 @@ export function SidebarContent({ onInteract }: { onInteract?: () => void }) {
                 <div className="pt-4 mt-4 border-t border-white/5">
                     <Link
                         href="/"
-                        target="_blank"
                         onClick={onInteract}
                         className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted transition-colors"
                     >
                         <Globe className="h-4 w-4" />
-                        View Live Site
+                        Back to Home
                     </Link>
                 </div>
             </nav>
